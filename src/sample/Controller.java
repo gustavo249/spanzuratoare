@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,23 +24,37 @@ public class Controller {
         welcome.setFont(new Font(18));
         label.setAlignment(Pos.TOP_CENTER);
 
-        Button enter = new Button("Enter");
-        enter.setOnAction(e -> {
-            String word = passwordField.getText();
-            if (word.isEmpty() || word == null)
-                System.out.println("Enter a word please !");
-            else
-                processWord(passwordField.getText());
+        Button enter = getButton("Enter", e -> {
+            setButtonActionEvent(passwordField);
         });
 
+        setUpScene(passwordField, label, welcome, enter);
+        window.show();
+    }
+
+    private static void setButtonActionEvent(PasswordField passwordField) {
+        String word = passwordField.getText();
+        if (word.isEmpty() || word == null)
+            System.out.println("Enter a word please !");
+        else
+            processWord(passwordField.getText());
+    }
+
+    private static Button getButton(String enter2, EventHandler<ActionEvent> actionEventEventHandler) {
+        Button enter = new Button(enter2);
+        enter.setOnAction(actionEventEventHandler);
+        return enter;
+    }
+
+    private static void setUpScene(PasswordField passwordField, Label label, Label welcome, Button enter) {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setHgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setConstraints(welcome, 0, 0);
-        gridPane.setConstraints(label, 0, 1);
-        gridPane.setConstraints(passwordField, 1, 1);
-        gridPane.setConstraints(enter, 1, 2);
+        GridPane.setConstraints(welcome, 0, 0);
+        GridPane.setConstraints(label, 0, 1);
+        GridPane.setConstraints(passwordField, 1, 1);
+        GridPane.setConstraints(enter, 1, 2);
         gridPane.getChildren().addAll(welcome, label, passwordField, enter);
 
         BorderPane borderPane = new BorderPane();
@@ -46,7 +62,6 @@ public class Controller {
 
         Scene scene = new Scene(borderPane, 350, 350);
         window.setScene(scene);
-        window.show();
     }
 
     private static void processWord(String word) {
@@ -85,11 +100,11 @@ public class Controller {
         gridPane.setVgap(10);
         gridPane.setHgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setConstraints(wordHint, 0, 0);
-        gridPane.setConstraints(label, 0, 1);
-        gridPane.setConstraints(letterInput, 1, 1);
-        gridPane.setConstraints(lives, 1, 5);
-        gridPane.setConstraints(addLetter, 2, 1);
+        GridPane.setConstraints(wordHint, 0, 0);
+        GridPane.setConstraints(label, 0, 1);
+        GridPane.setConstraints(letterInput, 1, 1);
+        GridPane.setConstraints(lives, 1, 5);
+        GridPane.setConstraints(addLetter, 2, 1);
         gridPane.getChildren().addAll(wordHint, label, letterInput, lives, addLetter);
 
         BorderPane borderPane = new BorderPane();
@@ -108,8 +123,7 @@ public class Controller {
         label.setFont(new Font(30));
         Label winner = new Label("The word was: " + word);
         winner.setFont(new Font(17));
-        Button newGame = new Button("Start a new game");
-        newGame.setOnAction(e -> start());
+        Button newGame = getButton("Start a new game", e -> start());
         vBox.getChildren().addAll(label, winner, newGame);
         Scene scene = new Scene(vBox, 350, 350);
         window.setScene(scene);
